@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
+import './StudentInfo.css';
 
 function StudentInfo() {
   const navigate = useNavigate();
@@ -50,81 +51,61 @@ function StudentInfo() {
   }
 
   return (
-    <div className="App">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px' }}>
-        <h1>Student Information</h1>
-        <div>
-          <span style={{ marginRight: '20px' }}>
-            Welcome, {loggedInUser.name || 'Student'}
-          </span>
-          <button 
-            onClick={handleLogout}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#f44336',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Logout
-          </button>
-          <button 
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#f44336',
-            color: 'inherit',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            marginLeft: '10px',
-            textDecoration: 'none'
-          }}
-          onClick={() => navigate('/')}
-        > 
-          Home
-        </button>
-
-        </div>
-      </div>
-
-      <div style={{ margin: '20px 0' }}>
-        <input
-          type="text"
-          placeholder="Enter Roll Number"
-          value={rollNumber}
-          onChange={handleRollNumberChange}
-          aria-label="Student Roll Number"
-          style={{
-            padding: '8px',
-            marginRight: '10px',
-            borderRadius: '4px',
-            border: '1px solid #ccc'
-          }}
-        />
-        <button 
-          onClick={fetchStudentData}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          Fetch Student Data
-        </button>
+    <div className="student-page-container">
+      {/* Decorative elements */}
+      <div className="decorative-elements">
+        <div className="decorative-element"></div>
+        <div className="decorative-element"></div>
+        <div className="decorative-element"></div>
       </div>
       
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      {data && (
-        <div className="result-container">
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+      <div className="content-container">
+        <div className="header-container">
+          <h1 className="page-title">Student Information</h1>
+          <div className="user-info">
+            <span className="welcome-text">
+              Welcome, {loggedInUser.name || 'Student'}
+            </span>
+            <button 
+              onClick={handleLogout}
+              className="logout-button"
+            >
+              Logout
+            </button>
+            <button 
+              className="home-button"
+              onClick={() => navigate('/')}
+            > 
+              Home
+            </button>
+          </div>
         </div>
-      )}
+
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Enter Roll Number"
+            value={rollNumber}
+            onChange={handleRollNumberChange}
+            aria-label="Student Roll Number"
+            className="search-input"
+          />
+          <button 
+            onClick={fetchStudentData}
+            className="search-button"
+          >
+            Fetch Student Data
+          </button>
+        </div>
+        
+        {loading && <p className="loading-text">Loading...</p>}
+        {error && <p className="error-text">Error: {error}</p>}
+        {data && (
+          <div className="result-container">
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

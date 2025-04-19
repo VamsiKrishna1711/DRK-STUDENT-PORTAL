@@ -2,6 +2,7 @@ import { Button, CssVarsProvider, FormControl, FormLabel, Input, Link, Sheet, Ty
 import axios from 'axios';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './RegisterPage.css';
 
 function RegisterPage(props) {
   const navigate = useNavigate();
@@ -77,33 +78,30 @@ function RegisterPage(props) {
   };
 
   return (
-    <main>
+    <main className="register-page-container">
+      {/* Wave elements for animation */}
+      <div className="wave-elements">
+        <div className="wave"></div>
+        <div className="wave"></div>
+        <div className="wave"></div>
+        <div className="wave"></div>
+      </div>
+      
       <CssVarsProvider {...props}>
         <Sheet
-          sx={{
-            width: 500,
-            mx: 'auto',
-            my: 4,
-            py: 3,
-            px: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            borderRadius: 'sm',
-            boxShadow: 'md',
-          }}
+          className="register-card"
           variant="outlined"
         >
           <div>
-            <Typography level="h4" component="h1">
-              <b>Welcome!</b>
+            <Typography level="h4" component="h1" className="register-title">
+              Create Your Account
             </Typography>
-            <Typography level="body-sm">Sign up to continue.</Typography>
+            <Typography level="body-sm" className="register-subtitle">Register to access your student portal</Typography>
           </div>
 
           <form onSubmit={handleSubmit}>
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel>Full Name</FormLabel>
+            <FormControl className="form-control-custom">
+              <FormLabel className="form-label-custom">Full Name</FormLabel>
               <Input
                 name="name"
                 value={formData.name}
@@ -111,11 +109,12 @@ function RegisterPage(props) {
                 placeholder="Enter your full name"
                 required
                 disabled={isLoading}
+                className="input-custom"
               />
             </FormControl>
 
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel>Roll Number</FormLabel>
+            <FormControl className="form-control-custom">
+              <FormLabel className="form-label-custom">Roll Number</FormLabel>
               <Input
                 name="rollNumber"
                 value={formData.rollNumber}
@@ -123,11 +122,12 @@ function RegisterPage(props) {
                 placeholder="Enter your roll number"
                 required
                 disabled={isLoading}
+                className="input-custom"
               />
             </FormControl>
 
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel>Password</FormLabel>
+            <FormControl className="form-control-custom">
+              <FormLabel className="form-label-custom">Password</FormLabel>
               <Input
                 name="password"
                 type="password"
@@ -136,11 +136,12 @@ function RegisterPage(props) {
                 placeholder="Create a password"
                 required
                 disabled={isLoading}
+                className="input-custom"
               />
             </FormControl>
 
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel>Confirm Password</FormLabel>
+            <FormControl className="form-control-custom">
+              <FormLabel className="form-label-custom">Confirm Password</FormLabel>
               <Input
                 name="confirmPassword"
                 type="password"
@@ -149,13 +150,13 @@ function RegisterPage(props) {
                 placeholder="Confirm your password"
                 required
                 disabled={isLoading}
+                className="input-custom"
               />
             </FormControl>
 
             {error && (
               <Typography 
-                color="danger" 
-                sx={{ mt: 1, mb: 2, textAlign: 'center' }}
+                className="error-message"
               >
                 {error}
               </Typography>
@@ -163,8 +164,7 @@ function RegisterPage(props) {
 
             {success && (
               <Typography 
-                color="success" 
-                sx={{ mt: 1, mb: 2, textAlign: 'center' }}
+                className="success-message"
               >
                 {success}
               </Typography>
@@ -174,21 +174,24 @@ function RegisterPage(props) {
               type="submit" 
               loading={isLoading}
               fullWidth
-              sx={{ mb: 2 }}
+              className="register-button"
             >
-              {isLoading ? 'Registering...' : 'Register'}
+              {isLoading ? 'Registering...' : 'Create Account'}
             </Button>
 
             <Typography
               endDecorator={<Link href="/login">Log in</Link>}
+              className="register-links"
               sx={{ alignSelf: 'center' }}
             >
               Already have an account?
             </Typography>
             <Typography
               endDecorator={<Link href="/">Home</Link>}
-              sx={{ alignSelf: 'center' }}
+              className="register-links"
+              sx={{ alignSelf: 'center', mt: 1 }}
             >
+              Return to
             </Typography>
           </form>
         </Sheet>

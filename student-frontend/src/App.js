@@ -5,10 +5,11 @@ import RegisterPage from './components/RegisterPage.js';
 import StudentInfo from './components/StudentInfo.js';
 import ProtectedRoute from './components/ProtectedRoutes.js';
 
+
 function App() {
   return (
     <div className='app'>
-      <h>created by vamsi krishna</h>
+      <h>created by V.Vamsi Krishna(23N71A0558)</h>
     <Router>
       <Routes>
         {/* Public Routes */}

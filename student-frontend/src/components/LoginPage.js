@@ -2,6 +2,7 @@ import { Button, CssVarsProvider, FormControl, FormLabel, Input, Link, Sheet, Ty
 import axios from 'axios';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './LoginPage.css';
 
 function LoginPage(props) {
   const navigate = useNavigate();
@@ -66,33 +67,30 @@ function LoginPage(props) {
   };
 
   return (
-    <main>
+    <main className="login-page-container">
+      {/* Animated particles */}
+      <div className="particles">
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+      </div>
+      
       <CssVarsProvider {...props}>
         <Sheet
-          sx={{
-            width: 300,
-            mx: 'auto',
-            my: 4,
-            py: 3,
-            px: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            borderRadius: 'sm',
-            boxShadow: 'md',
-          }}
+          className="login-card"
           variant="outlined"
         >
           <div>
-            <Typography level="h4" component="h1">
-              <b>Welcome back!</b>
+            <Typography level="h4" component="h1" className="login-title">
+              Welcome to DRK Student Portal
             </Typography>
-            <Typography level="body-sm">Sign in to continue.</Typography>
+            <Typography level="body-sm" className="login-subtitle">Sign in to continue to your dashboard</Typography>
           </div>
 
           <form onSubmit={handleSubmit}>
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel>Roll Number</FormLabel>
+            <FormControl className="form-control-custom">
+              <FormLabel className="form-label-custom">Roll Number</FormLabel>
               <Input
                 name="rollNumber"
                 type="text"
@@ -101,11 +99,12 @@ function LoginPage(props) {
                 placeholder="Enter your roll number"
                 required
                 disabled={isLoading}
+                className="input-custom"
               />
             </FormControl>
 
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel>Password</FormLabel>
+            <FormControl className="form-control-custom">
+              <FormLabel className="form-label-custom">Password</FormLabel>
               <Input
                 name="password"
                 type="password"
@@ -114,13 +113,13 @@ function LoginPage(props) {
                 placeholder="Enter your password"
                 required
                 disabled={isLoading}
+                className="input-custom"
               />
             </FormControl>
 
             {error && (
               <Typography 
-                color="danger" 
-                sx={{ mt: 1, mb: 2, textAlign: 'center' }}
+                className="error-message"
               >
                 {error}
               </Typography>
@@ -130,21 +129,24 @@ function LoginPage(props) {
               type="submit" 
               loading={isLoading}
               fullWidth
-              sx={{ mb: 2 }}
+              className="login-button"
             >
               {isLoading ? 'Signing in...' : 'Sign in'}
             </Button>
 
             <Typography
               endDecorator={<Link href="/register">Sign up</Link>}
+              className="login-links"
               sx={{ alignSelf: 'center' }}
             >
               Don't have an account?
             </Typography>
             <Typography
               endDecorator={<Link href="/">Home</Link>}
-              sx={{ alignSelf: 'center' }}
+              className="login-links"
+              sx={{ alignSelf: 'center', mt: 1 }}
             >
+              Return to
             </Typography>
           </form>
         </Sheet>
