@@ -64,6 +64,10 @@ function Hello() {
         navigate('/login');
     };
 
+    const handleStudentPortal = () => {
+        navigate('/student');
+    };
+
     return (
         <div className={`background-container ${imageLoaded ? 'image-loaded' : ''}`}>
             {/* Hidden image preloader */}
@@ -79,9 +83,14 @@ function Hello() {
             <h1>DRK STUDENT PORTAL{isLoggedIn ? `, ${userName}` : ''}</h1>
             <div className="navbar">
                 {isLoggedIn ? (
+                    <div>
                     <Button onClick={handleLogout}>
                         Logout
                     </Button>
+                      <Button sx={{ marginLeft: '20px' }} onClick={handleStudentPortal}>
+                      Student portal
+                  </Button>
+                  </div>
                 ) : (
                     <>
                         <Button>

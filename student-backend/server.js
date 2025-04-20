@@ -23,6 +23,7 @@ const studentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     rollNumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    courseName: { type: String, required: true },
     results: { type: Object } // To store JNTUH results if needed
 });
 
@@ -56,7 +57,8 @@ async function fetchData(rollNumber) {
 // Registration endpoint
 app.post('/api/register', async (req, res) => {
     try {
-        const { name, rollNumber, password } = req.body;
+        console.log('Received registration data:', req.body); 
+        const { name, rollNumber, courseName, password } = req.body;
 
         // Check if student already exists
         const existingStudent = await Student.findOne({ rollNumber });
@@ -74,9 +76,10 @@ app.post('/api/register', async (req, res) => {
         const newStudent = new Student({
             name,
             rollNumber,
+            courseName,
             password: hashedPassword
         });
-
+        console.log('Student object before saving:', newStudent);
         // Try to fetch JNTUH results
         try {
             const results = await fetchData(rollNumber);
@@ -141,7 +144,8 @@ app.post('/api/login', async (req, res) => {
             message: 'Login successful',
             student: {
                 name: student.name,
-                rollNumber: student.rollNumber
+                rollNumber: student.rollNumber,
+                courseName: student.courseName
             }
         });
 

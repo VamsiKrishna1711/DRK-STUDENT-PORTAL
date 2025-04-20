@@ -10,6 +10,7 @@ function RegisterPage(props) {
     name: '',
     rollNumber: '',
     password: '',
+    courseName: '',
     confirmPassword: ''
   });
   const [error, setError] = React.useState('');
@@ -44,6 +45,7 @@ function RegisterPage(props) {
       const response = await axios.post('http://localhost:5000/api/register', {
         name: formData.name,
         rollNumber: formData.rollNumber,
+        courseName: formData.courseName,
         password: formData.password
       });
 
@@ -53,6 +55,7 @@ function RegisterPage(props) {
         setFormData({
           name: '',
           rollNumber: '',
+          courseName: '',
           password: '',
           confirmPassword: ''
         });
@@ -124,6 +127,24 @@ function RegisterPage(props) {
                 disabled={isLoading}
                 className="input-custom"
               />
+            </FormControl>
+
+            <FormControl className="form-control-custom">
+              <FormLabel className="form-label-custom">Course</FormLabel>
+              <select
+                name="courseName"
+                value={formData.courseName}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+                className="input-custom"
+              >
+                <option value="">Select your course</option>
+                <option value="CSE">CSE</option>
+                <option value="CSM">CSM</option>
+                <option value="CSD">CSD</option>
+                <option value="Mechanical">Mechanical</option>
+              </select>
             </FormControl>
 
             <FormControl className="form-control-custom">

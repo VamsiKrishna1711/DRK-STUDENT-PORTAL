@@ -42,7 +42,13 @@ function LoginPage(props) {
 
       if (response.data.success) {
         // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify(response.data.student));
+        const userData = {
+          ...response.data.student,  // includes name, rollNumber, courseName
+        };
+        localStorage.setItem('user', JSON.stringify(userData));
+       // Add this temporarily to check the stored data
+      console.log('Stored user data:', JSON.parse(localStorage.getItem('user')));
+
         
         // Clear form
         setFormData({
