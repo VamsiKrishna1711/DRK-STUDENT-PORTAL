@@ -272,7 +272,6 @@ function StudentInfo() {
                 </table>
               </div>
             ))}
-
             {/* Overall Performance Summary */}
             <div className="overall-summary">
               <h3>Overall Performance</h3>
