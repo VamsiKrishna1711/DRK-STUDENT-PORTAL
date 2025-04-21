@@ -287,22 +287,6 @@ function StudentInfo() {
       </div>
     </div>
 
- 
-    <div className='content-container'>
-        <h>Additional Info</h>
-        <form>
-          <h3>Phone number:</h3> 
-          <input/>
-          <h3>Email address:</h3> 
-          <input/>
-          <h3>Address:</h3> 
-          <textarea/>
-          <h3>Insert photo:</h3> 
-          <input/>
-        </form>
-    </div>
-
-
     </div>
   );
 }
