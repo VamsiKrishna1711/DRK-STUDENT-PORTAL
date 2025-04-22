@@ -14,6 +14,11 @@ function StudentInfo() {
   const [showCourseSyllabus, setShowCourseSyllabus] = useState(false);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [showPdf, setShowPdf] = useState(false);
+  const [storedInfo, setStoredInfo] = useState({
+    phoneNumber: '',
+    email: '',
+    address: ''
+  });
   
 
   // Check if user is logged in
@@ -28,6 +33,25 @@ function StudentInfo() {
     localStorage.removeItem('user'); // Remove user from localStorage
     navigate('/login'); // Redirect to login page
   };
+
+  useEffect(() => {
+    const fetchStoredInfo = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user?.rollNumber) return;
+  
+        const response = await axios.get(`http://localhost:5000/api/student/info/${user.rollNumber}`);
+        if (response.data.success) {
+          setStoredInfo(response.data.studentInfo);
+        }
+      } catch (error) {
+        console.error('Error fetching stored info:', error);
+      }
+    };
+  
+    fetchStoredInfo();
+  }, []);
+
 
   const fetchStudentData = async () => {
     try {
@@ -46,6 +70,75 @@ function StudentInfo() {
       setLoading(false);
     }
   };
+
+ // State to store form data
+ const [formData, setFormData] = useState({
+  phoneNumber: '',
+  email: '',
+  address: ''
+});
+
+// State for handling submission feedback
+const [submitStatus, setSubmitStatus] = useState({
+  message: '',
+  isError: false
+});
+
+// Handle input changes
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prevState => ({
+    ...prevState,
+    [name]: value
+  }));
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setSubmitStatus({ message: '', isError: false });
+
+  try {
+    const rollNumber = JSON.parse(localStorage.getItem('user'))?.rollNumber;
+    
+    if (!rollNumber) {
+      setSubmitStatus({
+        message: 'Roll number not found. Please login again.',
+        isError: true
+      });
+      return;
+    }
+
+    const response = await axios.put('http://localhost:5000/api/register', {
+      ...formData,
+      rollNumber
+    });
+
+    if (response.data.success) {
+      // Update stored info with new values
+      setStoredInfo(prevState => ({
+        ...prevState,
+        ...formData
+      }));
+      
+      // Clear form data
+      setFormData({
+        phoneNumber: '',
+        email: '',
+        address: ''
+      });
+
+      setSubmitStatus({
+        message: 'Information updated successfully!',
+        isError: false
+      });
+    }
+  } catch (error) {
+    setSubmitStatus({
+      message: error.response?.data?.message || 'Failed to update information',
+      isError: true
+    });
+  }
+};
 
   const fetchSyllabus = () => {
     setShowSyllabus(!showSyllabus); // Toggle syllabus view
@@ -72,6 +165,13 @@ function StudentInfo() {
   if (!localStorage.getItem('user')) {
     return null; 
   }
+
+
+
+   
+  const shouldShowInput = (fieldName) => {
+    return !storedInfo[fieldName];
+  };
 
   return (
     <div className="student-page-container">
@@ -285,6 +385,91 @@ function StudentInfo() {
           </div>
         )}
       </div>
+    </div>
+
+    <div className="content-container">
+  <h2>Additional Info</h2>
+  
+  {/* Display stored information */}
+  <div className="stored-info">
+    {storedInfo.phoneNumber && (
+      <div className="info-display">
+        <h3>Phone Number</h3>
+        <p>{storedInfo.phoneNumber}</p>
+      </div>
+    )}
+    
+    {storedInfo.email && (
+      <div className="info-display">
+        <h3>Email</h3>
+        <p>{storedInfo.email}</p>
+      </div>
+    )}
+    
+    {storedInfo.address && (
+      <div className="info-display">
+        <h3>Address</h3>
+        <p>{storedInfo.address}</p>
+      </div>
+    )}
+  </div>
+
+
+  {(shouldShowInput('phoneNumber') || shouldShowInput('email') || shouldShowInput('address')) && (
+    <form onSubmit={handleSubmit}>
+      {shouldShowInput('phoneNumber') && (
+        <div className="form-group">
+          <h3>Phone Number</h3>
+          <input
+            type="tel"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            placeholder="Enter phone number"
+            className="form-input"
+          />
+        </div>
+      )}
+
+      {shouldShowInput('email') && (
+        <div className="form-group">
+          <h3>Email</h3>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter email"
+            className="form-input"
+          />
+        </div>
+      )}
+
+      {shouldShowInput('address') && (
+        <div className="form-group">
+          <h3>Address</h3>
+          <textarea
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            placeholder="Enter address"
+            className="form-textarea"
+          />
+        </div>
+      )}
+
+      {/* Status message */}
+      {submitStatus.message && (
+        <div className={`status-message ${submitStatus.isError ? 'error' : 'success'}`}>
+          {submitStatus.message}
+        </div>
+      )}
+
+      <button type="submit" className="submit-button">
+        Submit
+      </button>
+    </form>
+  )}
     </div>
 
     </div>

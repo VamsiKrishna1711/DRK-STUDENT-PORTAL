@@ -24,7 +24,10 @@ const studentSchema = new mongoose.Schema({
     rollNumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     courseName: { type: String, required: true },
-    results: { type: Object } // To store JNTUH results if needed
+    results: { type: Object }, // To store JNTUH results if needed
+    phoneNumber: { type: String, default: '' },
+    email: {type: String, default: ''},
+    address: { type: String,  default: ''}
 });
 
 const Student = mongoose.model('Student', studentSchema);
@@ -57,15 +60,15 @@ async function fetchData(rollNumber) {
 // Registration endpoint
 app.post('/api/register', async (req, res) => {
     try {
-        console.log('Received registration data:', req.body); 
+        console.log('Received registration data:', req.body);
         const { name, rollNumber, courseName, password } = req.body;
 
         // Check if student already exists
         const existingStudent = await Student.findOne({ rollNumber });
         if (existingStudent) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Student with this roll number already exists' 
+            return res.status(400).json({
+                success: false,
+                message: 'Student with this roll number already exists'
             });
         }
 
@@ -157,6 +160,73 @@ app.post('/api/login', async (req, res) => {
         });
     }
 });
+
+
+
+app.put('/api/register', async (req, res) => {
+    try {
+      const { rollNumber, ...updateFields } = req.body;
+      
+
+      const updatedStudent = await Student.findOneAndUpdate(
+        { rollNumber },
+        { $set: updateFields },
+        { new: true }
+      );
+  
+      if (!updatedStudent) {
+        return res.status(404).json({
+          success: false,
+          message: 'Student not found'
+        });
+      }
+  
+      res.json({
+        success: true,
+        message: 'Information updated successfully',
+        studentInfo: {
+          phoneNumber: updatedStudent.phoneNumber,
+          email: updatedStudent.email,
+          address: updatedStudent.address
+        }
+      });
+    } catch (error) {
+      console.error('Error updating student:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Server error'
+      });
+    }
+  });
+
+
+app.get('/api/student/info/:rollNumber', async (req, res) => {
+    try {
+      const student = await Student.findOne({ rollNumber: req.params.rollNumber });
+      if (!student) {
+        return res.status(404).json({ 
+          success: false, 
+          message: 'Student not found' 
+        });
+      }
+  
+      res.json({
+        success: true,
+        studentInfo: {
+          phoneNumber: student.phoneNumber || '',
+          email: student.email || '',
+          address: student.address || ''
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false, 
+        message: 'Server error' 
+      });
+    }
+  });
+  
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

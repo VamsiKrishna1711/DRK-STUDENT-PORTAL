@@ -572,3 +572,51 @@ pre {
     background-color: #0056b3;
   }
   
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-input, .form-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .form-textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .submit-button {
+    background-color: #1976d2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+  }
+  
+  .status-message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .status-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .status-message.error {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+  
+
+  
