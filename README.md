@@ -1,11 +1,12 @@
 
 # DRK Student Portal
-<img width="1894" height="1058" alt="Screenshot 2025-09-01 222521" src="https://github.com/user-attachments/assets/c31b567d-2a90-470a-aaed-b10daa9badb2" />
+
 <img width="1902" height="1064" alt="Screenshot 2025-09-01 222147" src="https://github.com/user-attachments/assets/b7345a67-c531-470e-8b19-e332c3db1abd" />
 <img width="1900" height="1079" alt="Screenshot 2025-09-01 222156" src="https://github.com/user-attachments/assets/b09730be-c4da-4248-8bed-679218dc51f0" />
 <img width="1899" height="1079" alt="Screenshot 2025-09-01 222225" src="https://github.com/user-attachments/assets/e5a80e85-2f23-4cc0-8c74-d81ec5f508d0" />
 <img width="1900" height="1065" alt="Screenshot 2025-09-01 222430" src="https://github.com/user-attachments/assets/a8c867f6-3511-4899-a1ba-cd8d494810d5" />
 <img width="1668" height="813" alt="Screenshot 2025-09-01 222449" src="https://github.com/user-attachments/assets/f0f4d52c-0d23-4745-b285-55671ae03238" />
+<img width="1894" height="1058" alt="Screenshot 2025-09-01 222521" src="https://github.com/user-attachments/assets/c31b567d-2a90-470a-aaed-b10daa9badb2" />
 
 
 
