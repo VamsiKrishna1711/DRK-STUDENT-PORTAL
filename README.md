@@ -1,4 +1,4 @@
- # DRK Student Portal
+# DRK Student Portal
 
 A full-stack web application for managing student information, academic results, and course materials. This portal provides students with a centralized platform to access their academic data, view syllabus information, and manage their personal details.
 
@@ -106,7 +106,9 @@ DRK-STUDENT-PORTAL-3/
 
 ## Created By
 
-V. Vamsi Krishna (23N71A0558)
+V. Vamsi Krishna (23N71A0558) ,
+G. Aneel (23N71A0521) ,
+D . Mourish Varma (23N71A0566) .
 
 ## License
 
