@@ -1,10 +1,10 @@
 # DRK Student Portal
+<img width="1902" height="1064" alt="Screenshot 2025-09-01 222147" src="https://github.com/user-attachments/assets/0734aaf6-004d-42af-b66a-c189145fb096" />
 <img width="1899" height="1079" alt="Screenshot 2025-09-01 222225" src="https://github.com/user-attachments/assets/388ce383-e9f8-4683-a862-de6b735fb183" />
 <img width="1900" height="1079" alt="Screenshot 2025-09-01 222156" src="https://github.com/user-attachments/assets/481b5b87-4c05-4f93-9c51-35044924ef63" />
-<img width="1902" height="1064" alt="Screenshot 2025-09-01 222147" src="https://github.com/user-attachments/assets/0734aaf6-004d-42af-b66a-c189145fb096" />
-<img width="1894" height="1058" alt="Screenshot 2025-09-01 222521" src="https://github.com/user-attachments/assets/b4bb5514-ef97-4ab5-8b05-1c2690355e18" />
 <img width="1668" height="813" alt="Screenshot 2025-09-01 222449" src="https://github.com/user-attachments/assets/ffa3e7d6-787c-4b22-99be-9abb3c75bbf3" />
 <img width="1900" height="1065" alt="Screenshot 2025-09-01 222430" src="https://github.com/user-attachments/assets/3e09602f-2966-409c-b7df-836b06839332" />
+<img width="1894" height="1058" alt="Screenshot 2025-09-01 222521" src="https://github.com/user-attachments/assets/b4bb5514-ef97-4ab5-8b05-1c2690355e18" />
 
 A full-stack web application for managing student information, academic results, and course materials. This portal provides students with a centralized platform to access their academic data, view syllabus information, and manage their personal details.
 
