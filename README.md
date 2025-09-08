@@ -1,4 +1,4 @@
-# DRK Student Portal
+ # DRK Student Portal
 
 A full-stack web application for managing student information, academic results, and course materials. This portal provides students with a centralized platform to access their academic data, view syllabus information, and manage their personal details.
 

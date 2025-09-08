@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/DRKstudents', {
+mongoose.connect('mongodb://localhost:27017/DRKstudents', {  
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
@@ -35,7 +35,8 @@ const Student = mongoose.model('Student', studentSchema);
 // Your existing fetchData function
 async function fetchData(rollNumber) {
     try {
-        const url = `https://jntuhresults.dhethi.com/api/getAcademicResult?rollNumber=${rollNumber}`;
+        const url = `
+https://jntuhresults.dhethi.com/api/getAcademicResult?rollNumber=${rollNumber}`;
         const fetch = globalThis.fetch || (await import('node-fetch')).default;
         const response = await fetch(url, {
             method: 'GET',
@@ -82,6 +83,8 @@ app.post('/api/register', async (req, res) => {
             courseName,
             password: hashedPassword
         });
+
+
         console.log('Student object before saving:', newStudent);
         // Try to fetch JNTUH results
         try {

@@ -45,7 +45,7 @@
 }
 
 .background-container.image-loaded {
-    background-image: url(bg-img2.jpg);
+    background-image: url(bg-img-3.jpg);
     background-size: cover;
     background-position: center;
     animation: fadeIn 1s ease-in-out forwards;
