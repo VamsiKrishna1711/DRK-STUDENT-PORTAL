@@ -13,7 +13,7 @@ A full-stack web application for managing student information, academic results,
 The DRK Student Portal consists of two main components:
 - **Frontend**: A React-based web interface for students to interact with the portal
 - **Backend**: An Express.js API that handles authentication, data management, and integrates with external services
-
+ 
 ## Features
 
 - **User Authentication**: Secure registration and login system for students
