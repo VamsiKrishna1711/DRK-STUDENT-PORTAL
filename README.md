@@ -1,4 +1,4 @@
-# DRK Student Portal
+ # DRK Student Portal
 <img width="1902" height="1064" alt="Screenshot 2025-09-01 222147" src="https://github.com/user-attachments/assets/0734aaf6-004d-42af-b66a-c189145fb096" />
 <img width="1899" height="1079" alt="Screenshot 2025-09-01 222225" src="https://github.com/user-attachments/assets/388ce383-e9f8-4683-a862-de6b735fb183" />
 <img width="1900" height="1079" alt="Screenshot 2025-09-01 222156" src="https://github.com/user-attachments/assets/481b5b87-4c05-4f93-9c51-35044924ef63" />
