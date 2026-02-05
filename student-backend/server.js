@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
@@ -23,8 +25,9 @@ const studentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     rollNumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    courseName: { type: String, required: true },
-    results: { type: Object }, // To store JNTUH results if needed
+    courseName: { type: String, default: 'B.Tech', required: false },
+    year: { type: Number, required: true },
+    results: { type: Object },
     phoneNumber: { type: String, default: '' },
     email: {type: String, default: ''},
     address: { type: String,  default: ''}
@@ -32,11 +35,9 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model('Student', studentSchema);
 
-// Your existing fetchData function
 async function fetchData(rollNumber) {
     try {
-        const url = `
-https://jntuhresults.dhethi.com/api/getAcademicResult?rollNumber=${rollNumber}`;
+        const url = `https://jntuhresults.dhethi.com/api/getAcademicResult?rollNumber=${rollNumber}`;
         const fetch = globalThis.fetch || (await import('node-fetch')).default;
         const response = await fetch(url, {
             method: 'GET',
@@ -62,9 +63,8 @@ https://jntuhresults.dhethi.com/api/getAcademicResult?rollNumber=${rollNumber}`;
 app.post('/api/register', async (req, res) => {
     try {
         console.log('Received registration data:', req.body);
-        const { name, rollNumber, courseName, password } = req.body;
+        const { name, rollNumber, password, year } = req.body;
 
-        // Check if student already exists
         const existingStudent = await Student.findOne({ rollNumber });
         if (existingStudent) {
             return res.status(400).json({
@@ -73,26 +73,26 @@ app.post('/api/register', async (req, res) => {
             });
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new student
         const newStudent = new Student({
             name,
             rollNumber,
-            courseName,
-            password: hashedPassword
+            courseName: 'B.Tech',
+            password: hashedPassword,
+            year
         });
 
-
-        console.log('Student object before saving:', newStudent);
-        // Try to fetch JNTUH results
         try {
             const results = await fetchData(rollNumber);
             newStudent.results = results;
+            if (results.Details?.NAME_OF_THE_COURSE) {
+                newStudent.courseName = results.Details.NAME_OF_THE_COURSE;
+            } else if (results.details?.courseName) {
+                newStudent.courseName = results.details.courseName;
+            }
         } catch (error) {
-            console.log('Could not fetch JNTUH results:', error);
-            // Continue registration even if results fetch fails
+            console.log('Could not fetch JNTUH results:', error.message);
         }
 
         await newStudent.save();
@@ -106,12 +106,11 @@ app.post('/api/register', async (req, res) => {
         console.error('Registration error:', error);
         res.status(500).json({
             success: false,
-            message: 'Error during registration'
+            message: error.message || 'Error during registration'
         });
     }
 });
 
-// Your existing results endpoint
 app.get('/api/student/:rollNumber', async (req, res) => {
     try {
         const { rollNumber } = req.params;
@@ -127,7 +126,6 @@ app.post('/api/login', async (req, res) => {
     try {
         const { rollNumber, password } = req.body;
 
-        // Find student
         const student = await Student.findOne({ rollNumber });
         if (!student) {
             return res.status(401).json({
@@ -136,7 +134,6 @@ app.post('/api/login', async (req, res) => {
             });
         }
 
-        // Check password
         const validPassword = await bcrypt.compare(password, student.password);
         if (!validPassword) {
             return res.status(401).json({
@@ -151,7 +148,8 @@ app.post('/api/login', async (req, res) => {
             student: {
                 name: student.name,
                 rollNumber: student.rollNumber,
-                courseName: student.courseName
+                courseName: student.courseName,
+                year: student.year
             }
         });
 
@@ -164,12 +162,9 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-
-
 app.put('/api/register', async (req, res) => {
     try {
       const { rollNumber, ...updateFields } = req.body;
-      
 
       const updatedStudent = await Student.findOneAndUpdate(
         { rollNumber },
@@ -200,8 +195,7 @@ app.put('/api/register', async (req, res) => {
         message: 'Server error'
       });
     }
-  });
-
+});
 
 app.get('/api/student/info/:rollNumber', async (req, res) => {
     try {
@@ -227,9 +221,33 @@ app.get('/api/student/info/:rollNumber', async (req, res) => {
         message: 'Server error' 
       });
     }
-  });
-  
+});
 
+// Notes endpoint - reads links from text files
+app.get('/api/notes/:year', (req, res) => {
+    const { year } = req.params;
+    const notesPath = path.join(__dirname, 'public', 'notes', `year${year}`);
+    
+    fs.readdir(notesPath, (err, folders) => {
+        if (err) {
+            return res.json({ success: true, notes: [] });
+        }
+        
+        const notes = [];
+        folders.forEach(folder => {
+            const linkFile = path.join(notesPath, folder, 'link.txt');
+            if (fs.existsSync(linkFile)) {
+                const link = fs.readFileSync(linkFile, 'utf8').trim();
+                notes.push({
+                    subject: folder,
+                    link: link
+                });
+            }
+        });
+        
+        res.json({ success: true, notes: notes });
+    });
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

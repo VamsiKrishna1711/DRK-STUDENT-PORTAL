@@ -1,267 +1,139 @@
-/* Import modern fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-/* Animated background */
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-}
-
-@keyframes wave {
-  0% {
-    transform: translateX(0) translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateX(15px) translateY(-15px) rotate(4deg);
-  }
-  100% {
-    transform: translateX(0) translateY(0) rotate(0deg);
-  }
-}
-
-@keyframes wave2 {
-  0% {
-    transform: translateX(0) translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateX(-15px) translateY(10px) rotate(-3deg);
-  }
-  100% {
-    transform: translateX(0) translateY(0) rotate(0deg);
-  }
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .register-page-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(120deg, #a1c4fd, #c2e9fb, #d4fc79, #96e6a1);
-  background-size: 300% 300%;
-  animation: gradientAnimation 20s ease infinite;
-  font-family: 'Poppins', sans-serif;
-  position: relative;
-  overflow: hidden;
+  background: #0a0a0a;
+  font-family: 'Inter', sans-serif;
+  padding: 20px;
 }
 
-/* Animated shapes */
-.register-page-container::before,
-.register-page-container::after {
-  content: '';
-  position: absolute;
-  z-index: 0;
-}
-
-.register-page-container::before {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(161, 196, 253, 0.4) 0%, rgba(161, 196, 253, 0) 70%);
-  border-radius: 50%;
-  top: -150px;
-  right: -150px;
-  animation: pulse 8s ease-in-out infinite;
-}
-
-.register-page-container::after {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(150, 230, 161, 0.4) 0%, rgba(150, 230, 161, 0) 70%);
-  border-radius: 50%;
-  bottom: -100px;
-  left: -100px;
-  animation: pulse 10s ease-in-out infinite;
-}
-
-/* Floating elements */
 .wave-elements {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.wave {
-  position: absolute;
-  opacity: 0.2;
-  border-radius: 40%;
-}
-
-.wave:nth-child(1) {
-  width: 500px;
-  height: 500px;
-  background-color: #a1c4fd;
-  top: -200px;
-  right: -200px;
-  animation: wave 15s ease-in-out infinite;
-}
-
-.wave:nth-child(2) {
-  width: 400px;
-  height: 400px;
-  background-color: #c2e9fb;
-  bottom: -150px;
-  left: -150px;
-  animation: wave2 12s ease-in-out infinite;
-}
-
-.wave:nth-child(3) {
-  width: 300px;
-  height: 300px;
-  background-color: #d4fc79;
-  top: 70%;
-  right: 10%;
-  animation: wave 18s ease-in-out infinite;
-}
-
-.wave:nth-child(4) {
-  width: 250px;
-  height: 250px;
-  background-color: #96e6a1;
-  top: 20%;
-  left: 10%;
-  animation: wave2 16s ease-in-out infinite;
+  display: none;
 }
 
 .register-card {
-  width: 500px !important;
-  padding: 40px 30px !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-  background-color: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
+  width: 450px !important;
+  max-width: 95%;
+  padding: 40px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-color: #ffffff !important;
+  border: 2px solid #00bcd4 !important;
   position: relative;
-  z-index: 1;
-}
-
-.register-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
-}
-
-.register-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(90deg, #a1c4fd, #96e6a1);
 }
 
 .register-title {
   margin-bottom: 8px !important;
-  color: #1a2b4b !important;
+  color: #0a0a0a !important;
   font-weight: 700 !important;
+  font-size: 24px !important;
+  letter-spacing: 0;
 }
 
 .register-subtitle {
-  margin-bottom: 24px !important;
-  color: #64748b !important;
+  margin-bottom: 32px !important;
+  color: #666666 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
 }
 
 .form-control-custom {
-  margin-bottom: 20px !important;
+  margin-bottom: 18px !important;
 }
 
 .form-label-custom {
-  color: #334155 !important;
-  font-weight: 500 !important;
-  margin-bottom: 6px !important;
+  color: #0a0a0a !important;
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+  font-size: 13px !important;
 }
 
 .input-custom {
-  border-radius: 8px !important;
-  background-color: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  padding: 12px 16px !important;
-  transition: all 0.3s ease;
+  border-radius: 0 !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  padding: 12px !important;
+  transition: border-color 0.2s;
+  font-size: 14px !important;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
 }
 
 .input-custom:focus {
-  border-color: #a1c4fd !important;
-  box-shadow: 0 0 0 3px rgba(161, 196, 253, 0.2) !important;
+  border-color: #00bcd4 !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+  outline: none;
+}
+
+select.input-custom {
+  cursor: pointer;
 }
 
 .register-button {
-  margin-top: 10px !important;
+  margin-top: 8px !important;
   margin-bottom: 24px !important;
-  background: linear-gradient(90deg, #a1c4fd, #96e6a1) !important;
-  border-radius: 8px !important;
+  background: #00bcd4 !important;
+  border-radius: 0 !important;
   padding: 12px !important;
   font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: uppercase !important;
   font-size: 14px !important;
-  box-shadow: 0 4px 10px rgba(150, 230, 161, 0.3) !important;
-  transition: all 0.3s ease !important;
+  box-shadow: none !important;
+  transition: background 0.2s !important;
+  border: none !important;
+  color: #ffffff !important;
 }
 
 .register-button:hover {
-  box-shadow: 0 6px 15px rgba(150, 230, 161, 0.4) !important;
-  transform: translateY(-2px) !important;
+  background: #00acc1 !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .register-links {
-  font-size: 14px !important;
-  color: #64748b !important;
+  font-size: 13px !important;
+  color: #666666 !important;
+  font-weight: 400 !important;
 }
 
 .register-links a {
-  color: #a1c4fd !important;
-  font-weight: 500 !important;
+  color: #00bcd4 !important;
+  font-weight: 600 !important;
   text-decoration: none !important;
-  transition: color 0.3s ease !important;
+  transition: color 0.2s !important;
 }
 
 .register-links a:hover {
-  color: #96e6a1 !important;
-  text-decoration: underline !important;
+  color: #0097a7 !important;
 }
 
 .error-message {
-  background-color: rgba(239, 68, 68, 0.1) !important;
-  color: #ef4444 !important;
-  padding: 10px !important;
-  border-radius: 6px !important;
-  font-size: 14px !important;
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+  padding: 12px !important;
+  border-radius: 0 !important;
+  font-size: 13px !important;
   margin-bottom: 16px !important;
-  border-left: 3px solid #ef4444 !important;
+  border: 1px solid #ef5350 !important;
+  font-weight: 500 !important;
 }
 
 .success-message {
-  background-color: rgba(16, 185, 129, 0.1) !important;
-  color: #10b981 !important;
-  padding: 10px !important;
-  border-radius: 6px !important;
-  font-size: 14px !important;
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+  padding: 12px !important;
+  border-radius: 0 !important;
+  font-size: 13px !important;
   margin-bottom: 16px !important;
-  border-left: 3px solid #10b981 !important;
+  border: 1px solid #66bb6a !important;
+  font-weight: 500 !important;
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 32px 24px !important;
+  }
 }

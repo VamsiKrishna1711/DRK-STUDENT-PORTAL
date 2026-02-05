@@ -10,7 +10,7 @@ function RegisterPage(props) {
     name: '',
     rollNumber: '',
     password: '',
-    courseName: '',
+    year: '',
     confirmPassword: ''
   });
   const [error, setError] = React.useState('');
@@ -22,7 +22,6 @@ function RegisterPage(props) {
       ...formData, 
       [e.target.name]: e.target.value 
     });
-    // Clear any previous errors when user starts typing
     setError('');
   };
 
@@ -32,47 +31,39 @@ function RegisterPage(props) {
     setError('');
     setSuccess('');
 
-    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match");
       setIsLoading(false);
       return;
     }
 
-    
-
     try {
       const response = await axios.post('http://localhost:5000/api/register', {
         name: formData.name,
         rollNumber: formData.rollNumber,
-        courseName: formData.courseName,
+        year: parseInt(formData.year),
         password: formData.password
       });
 
       if (response.data.success) {
         setSuccess('Registration successful! Redirecting to login...');
-        // Clear form
         setFormData({
           name: '',
           rollNumber: '',
-          courseName: '',
+          year: '',
           password: '',
           confirmPassword: ''
         });
-        // Redirect to login page after 2 seconds
         setTimeout(() => {
           navigate('/login');
         }, 2000);
       }
     } catch (error) {
       if (error.response) {
-        // Server responded with an error
         setError(error.response.data.message || 'Registration failed');
       } else if (error.request) {
-        // Request was made but no response received
         setError('No response from server. Please try again.');
       } else {
-        // Something else went wrong
         setError('An error occurred. Please try again.');
       }
     } finally {
@@ -82,7 +73,6 @@ function RegisterPage(props) {
 
   return (
     <main className="register-page-container">
-      {/* Wave elements for animation */}
       <div className="wave-elements">
         <div className="wave"></div>
         <div className="wave"></div>
@@ -130,20 +120,20 @@ function RegisterPage(props) {
             </FormControl>
 
             <FormControl className="form-control-custom">
-              <FormLabel className="form-label-custom">Course</FormLabel>
+              <FormLabel className="form-label-custom">Year</FormLabel>
               <select
-                name="courseName"
-                value={formData.courseName}
+                name="year"
+                value={formData.year}
                 onChange={handleChange}
                 required
                 disabled={isLoading}
                 className="input-custom"
               >
-                <option value="">Select your course</option>
-                <option value="CSE">CSE</option>
-                <option value="CSM">CSM</option>
-                <option value="CSD">CSD</option>
-                <option value="Mechanical">Mechanical</option>
+                <option value="">Select your year</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
               </select>
             </FormControl>
 
