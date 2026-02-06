@@ -2,9 +2,11 @@ import { Button, CssVarsProvider, FormControl, FormLabel, Input, Link, Sheet, Ty
 import axios from 'axios';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config/api.js';
+import { BackgroundPaths } from './BackgroundPaths.js';
 import './LoginPage.css';
 
-function LoginPage(props) {
+function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState({
     rollNumber: '',
@@ -13,20 +15,21 @@ function LoginPage(props) {
   const [error, setError] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // Check if user is already logged in
+  // Redirect to home if user is already logged in
   React.useEffect(() => {
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
-      navigate('/'); // Redirect to home if already logged in
+      navigate('/');
     }
   }, [navigate]);
 
   const handleChange = (e) => {
+    // Trim input to prevent leading/trailing whitespace and reduce XSS surface
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value.trim()
     });
-    setError(''); // Clear any previous errors
+    setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -34,10 +37,17 @@ function LoginPage(props) {
     setIsLoading(true);
     setError('');
 
+    // Validate inputs before submission
+    if (!formData.rollNumber.trim() || !formData.password.trim()) {
+      setError('Roll number and password are required.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
-        rollNumber: formData.rollNumber,
-        password: formData.password
+      const response = await axios.post(`${API_URL}/api/login`, {
+        rollNumber: formData.rollNumber.trim(),
+        password: formData.password.trim()
       });
 
       if (response.data.success) {
@@ -46,9 +56,6 @@ function LoginPage(props) {
           ...response.data.student,  // includes name, rollNumber, courseName
         };
         localStorage.setItem('user', JSON.stringify(userData));
-       // Add this temporarily to check the stored data
-      console.log('Stored user data:', JSON.parse(localStorage.getItem('user')));
-
         
         // Clear form
         setFormData({
@@ -74,6 +81,7 @@ function LoginPage(props) {
 
   return (
     <main className="login-page-container">
+      <BackgroundPaths />
       {/* Animated particles */}
       <div className="particles">
         <div className="particle"></div>
@@ -82,7 +90,7 @@ function LoginPage(props) {
         <div className="particle"></div>
       </div>
       
-      <CssVarsProvider {...props}>
+      <CssVarsProvider>
         <Sheet
           className="login-card"
           variant="outlined"

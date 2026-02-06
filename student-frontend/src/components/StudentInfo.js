@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../App.css';
+import API_URL from '../config/api.js';
+import { BackgroundPaths } from './BackgroundPaths.js';
+import { ShaderAnimation } from './ShaderAnimation.js';
 import './StudentInfo.css';
 
 function StudentInfo() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -47,7 +51,7 @@ function StudentInfo() {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user?.rollNumber) return;
 
-        const response = await axios.get(`http://localhost:5000/api/student/info/${user.rollNumber}`);
+        const response = await axios.get(`${API_URL}/api/student/info/${user.rollNumber}`);
         if (response.data.success) {
           setStoredInfo(response.data.studentInfo);
         }
@@ -59,17 +63,46 @@ function StudentInfo() {
     fetchStoredInfo();
   }, []);
 
+  // If navigated here with state.openNotes === true, open notes section
+  useEffect(() => {
+    if (location && location.state && location.state.openNotes) {
+      setShowNotes(true);
+      // fetch notes for the selected year
+      fetchNotesForYear(selectedYear);
+      // clear the navigation state so it doesn't reopen on refresh/navigation
+      try {
+        window.history.replaceState({}, document.title);
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [location, selectedYear]);
+
   const fetchStudentData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const rollNumber = JSON.parse(localStorage.getItem('user')).rollNumber;
-      const response = await axios.get(`http://localhost:5000/api/student/${rollNumber}`);
-      setData(response.data);
-      setShowMarks(!showMarks);
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const rollNumber = user.rollNumber;
+      if (!rollNumber) {
+        setError('Roll number not found. Please login again.');
+        return;
+      }
+
+      const response = await axios.get(`${API_URL}/api/student/${rollNumber}`);
+
+      // Normalize backend response: supports both legacy (raw data) and new ({ success: true, data: {...} }) formats
+      const payload = (response.data && response.data.data) ? response.data.data : response.data;
+      if (!payload) {
+        setError('No data returned from server');
+        return;
+      }
+
+      setData(payload);
+      setShowMarks(true);  // Explicitly show results instead of toggling
       if (showNotes) setShowNotes(false);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || 'Failed to fetch student data');
     } finally {
       setLoading(false);
     }
@@ -91,9 +124,10 @@ function StudentInfo() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Trim all inputs except city (which is read-only)
     setFormData(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: name === 'city' ? value : value.trim()
     }));
   };
 
@@ -104,6 +138,7 @@ function StudentInfo() {
       pincode: pincode
     }));
 
+    // Auto-fetch city when 6-digit pincode is entered
     if (pincode.length === 6) {
       try {
         const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
@@ -135,13 +170,13 @@ function StudentInfo() {
         return;
       }
 
-      const fullAddress = formData.houseNo && formData.buildingArea && formData.city && formData.pincode
-        ? `${formData.houseNo}, ${formData.buildingArea}, ${formData.city} - ${formData.pincode}`
+      const fullAddress = formData.houseNo.trim() && formData.buildingArea.trim() && formData.city.trim() && formData.pincode.trim()
+        ? `${formData.houseNo.trim()}, ${formData.buildingArea.trim()}, ${formData.city.trim()} - ${formData.pincode.trim()}`
         : '';
 
-      const response = await axios.put('http://localhost:5000/api/register', {
-        phoneNumber: formData.phoneNumber || undefined,
-        email: formData.email || undefined,
+      const response = await axios.put(`${API_URL}/api/register`, {
+        phoneNumber: formData.phoneNumber ? formData.phoneNumber.trim() : undefined,
+        email: formData.email ? formData.email.trim() : undefined,
         address: fullAddress || undefined,
         rollNumber
       });
@@ -178,7 +213,7 @@ function StudentInfo() {
 
   const fetchNotesForYear = async (year) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/notes/${year}`);
+      const response = await axios.get(`${API_URL}/api/notes/${year}`);
       if (response.data.success) {
         setNotesList(response.data.notes);
       }
@@ -208,6 +243,7 @@ function StudentInfo() {
 
   return (
     <div className="student-page-container">
+      <BackgroundPaths />
       <div className="decorative-elements">
         <div className="decorative-element"></div>
         <div className="decorative-element"></div>
@@ -239,6 +275,8 @@ function StudentInfo() {
           </div>
         </div>
 
+        <ShaderAnimation />
+
         <div className="search-container">
           <div className="search-buttons-wrapper">
             <button onClick={fetchStudentData} className="search-button">
@@ -253,17 +291,18 @@ function StudentInfo() {
             <div className="notes-container">
               <h3>Year {selectedYear} Notes</h3>
               {notesList.length > 0 ? (
-                <div className="notes-list">
+                <div className="notes-grid">
                   {notesList.map((note, index) => (
-                    <a
-                      key={index}
-                      href={note.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="note-link"
-                    >
-                      {note.subject}
-                    </a>
+                    <div key={index} className="note-card">
+                      <a
+                        href={note.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="note-link"
+                      >
+                        {note.subject}
+                      </a>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -282,21 +321,20 @@ function StudentInfo() {
                   <tbody>
                     <tr>
                       <td><strong>Name:</strong></td>
-                      <td>{data.details.name}</td>
+                      <td>{(data.details && data.details.name) || (data.Details && data.Details.name) || 'N/A'}</td>
                       <td><strong>Roll Number:</strong></td>
-                      <td>{data.details.rollNumber}</td>
+                      <td>{(data.details && data.details.rollNumber) || (data.Details && data.Details.rollNumber) || 'N/A'}</td>
                     </tr>
                     <tr>
                       <td><strong>College Code:</strong></td>
-                      <td>{data.details.collegeCode}</td>
+                      <td>{(data.details && data.details.collegeCode) || (data.Details && data.Details.collegeCode) || 'N/A'}</td>
                       <td><strong>Father's Name:</strong></td>
-                      <td>{data.details.fatherName}</td>
+                      <td>{(data.details && data.details.fatherName) || (data.Details && data.Details.fatherName) || 'N/A'}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-
-              {data.results.semesters.map((semester, index) => (
+              {((data.results && data.results.semesters) || (data.Results && data.Results.semesters) || []).map((semester, index) => (
                 <div key={index} className="semester-section">
                   <h3>Semester {semester.semester}</h3>
                   <table className="results-table">
@@ -312,15 +350,15 @@ function StudentInfo() {
                       </tr>
                     </thead>
                     <tbody>
-                      {semester.subjects.map((subject, subIndex) => (
+                      {(semester.subjects || []).map((subject, subIndex) => (
                         <tr key={subIndex}>
-                          <td>{subject.subjectCode}</td>
-                          <td>{subject.subjectName}</td>
-                          <td>{subject.internalMarks}</td>
-                          <td>{subject.externalMarks}</td>
-                          <td>{subject.totalMarks}</td>
-                          <td className={subject.grades === 'F' ? 'failed-grade' : ''}>{subject.grades}</td>
-                          <td>{subject.credits}</td>
+                          <td>{subject.subjectCode || ''}</td>
+                          <td>{subject.subjectName || ''}</td>
+                          <td>{subject.internalMarks ?? ''}</td>
+                          <td>{subject.externalMarks ?? ''}</td>
+                          <td>{subject.totalMarks ?? ''}</td>
+                          <td className={subject.grades === 'F' ? 'failed-grade' : ''}>{subject.grades ?? ''}</td>
+                          <td>{subject.credits ?? ''}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -328,9 +366,9 @@ function StudentInfo() {
                       <tr>
                         <td colSpan="7">
                           <div className="semester-summary">
-                            <span><strong>SGPA:</strong> {semester.semesterSGPA}</span>
-                            <span><strong>Credits:</strong> {semester.semesterCredits}</span>
-                            <span><strong>Backlogs:</strong> {semester.backlogs}</span>
+                            <span><strong>SGPA:</strong> {semester.semesterSGPA ?? 'N/A'}</span>
+                            <span><strong>Credits:</strong> {semester.semesterCredits ?? 'N/A'}</span>
+                            <span><strong>Backlogs:</strong> {semester.backlogs ?? 'N/A'}</span>
                           </div>
                         </td>
                       </tr>
@@ -338,13 +376,12 @@ function StudentInfo() {
                   </table>
                 </div>
               ))}
-
               <div className="overall-summary">
                 <h3>Overall Performance</h3>
                 <div className="summary-details">
-                  <span><strong>CGPA:</strong> {data.results.CGPA}</span>
-                  <span><strong>Total Credits:</strong> {data.results.credits}</span>
-                  <span><strong>Total Backlogs:</strong> {data.results.backlogs}</span>
+                  <span><strong>CGPA:</strong> {(data.results && data.results.CGPA) || (data.Results && data.Results.CGPA) || 'N/A'}</span>
+                  <span><strong>Total Credits:</strong> {(data.results && data.results.credits) || (data.Results && data.Results.credits) || 'N/A'}</span>
+                  <span><strong>Total Backlogs:</strong> {(data.results && data.results.backlogs) || (data.Results && data.Results.backlogs) || 'N/A'}</span>
                 </div>
               </div>
             </div>

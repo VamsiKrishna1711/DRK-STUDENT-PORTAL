@@ -2,9 +2,11 @@ import { Button, CssVarsProvider, FormControl, FormLabel, Input, Link, Sheet, Ty
 import axios from 'axios';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config/api.js';
+import { BackgroundPaths } from './BackgroundPaths.js';
 import './RegisterPage.css';
 
-function RegisterPage(props) {
+function RegisterPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState({
     name: '',
@@ -18,9 +20,10 @@ function RegisterPage(props) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleChange = (e) => {
+    // Trim string inputs for consistency; preserve password field as-is
     setFormData({ 
       ...formData, 
-      [e.target.name]: e.target.value 
+      [e.target.name]: e.target.name === 'password' || e.target.name === 'confirmPassword' ? e.target.value : e.target.value.trim()
     });
     setError('');
   };
@@ -31,6 +34,21 @@ function RegisterPage(props) {
     setError('');
     setSuccess('');
 
+    // Validate all required fields
+    if (!formData.name.trim() || !formData.rollNumber.trim() || !formData.year || !formData.password.trim()) {
+      setError('All fields are required.');
+      setIsLoading(false);
+      return;
+    }
+
+    // Enforce minimum password length
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      setIsLoading(false);
+      return;
+    }
+
+    // Verify passwords match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match");
       setIsLoading(false);
@@ -38,9 +56,9 @@ function RegisterPage(props) {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
-        name: formData.name,
-        rollNumber: formData.rollNumber,
+      const response = await axios.post(`${API_URL}/api/register`, {
+        name: formData.name.trim(),
+        rollNumber: formData.rollNumber.trim(),
         year: parseInt(formData.year),
         password: formData.password
       });
@@ -73,6 +91,7 @@ function RegisterPage(props) {
 
   return (
     <main className="register-page-container">
+      <BackgroundPaths />
       <div className="wave-elements">
         <div className="wave"></div>
         <div className="wave"></div>
@@ -80,7 +99,7 @@ function RegisterPage(props) {
         <div className="wave"></div>
       </div>
       
-      <CssVarsProvider {...props}>
+      <CssVarsProvider>
         <Sheet
           className="register-card"
           variant="outlined"
